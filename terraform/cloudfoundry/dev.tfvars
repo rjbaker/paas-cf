@@ -1,4 +1,4 @@
-api_access_cidrs               = []
+api_access_cidrs = ["0.0.0.0/0"]
 apps_dns_zone_id               = "Z3R6XFWUT4YZHB"
 apps_wildcard_canary_weight    = "0"
 apps_wildcard_weight           = "100"
