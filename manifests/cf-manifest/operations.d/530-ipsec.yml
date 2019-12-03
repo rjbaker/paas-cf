@@ -15,13 +15,13 @@
     release: ipsec
     properties:
       racoon:
-        ports:
-        - name: router
-          targets: ((terraform_outputs_cell_subnet_cidr_blocks))
         certificate_authority_private_key: "((ipsec_ca.private_key))"
         certificate_authority_cert: "((ipsec_ca.certificate))"
         level: use
         verify_certificate: 'on'
+        ports:
+          - name: router
+            targets: ((terraform_outputs_ipsec_subnet_cidr_blocks))
 
 - type: replace
   path: /instance_groups/name=diego-cell/jobs/-
@@ -30,10 +30,10 @@
     release: ipsec
     properties:
       racoon:
-        ports:
-        - name: cell
-          targets: ((terraform_outputs_router_subnet_cidr_blocks))
         certificate_authority_private_key: "((ipsec_ca.private_key))"
         certificate_authority_cert: "((ipsec_ca.certificate))"
         level: use
         verify_certificate: 'on'
+        ports:
+          - name: cell
+            targets: ((terraform_outputs_ipsec_subnet_cidr_blocks))
