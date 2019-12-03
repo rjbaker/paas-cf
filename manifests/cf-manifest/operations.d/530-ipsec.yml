@@ -17,7 +17,7 @@
       racoon:
         certificate_authority_private_key: "((ipsec_ca.private_key))"
         certificate_authority_cert: "((ipsec_ca.certificate))"
-        level: use
+        level: require
         verify_certificate: 'on'
         ports:
           - name: router
@@ -32,7 +32,7 @@
       racoon:
         certificate_authority_private_key: "((ipsec_ca.private_key))"
         certificate_authority_cert: "((ipsec_ca.certificate))"
-        level: use
+        level: require
         verify_certificate: 'on'
         ports:
           - name: cell
