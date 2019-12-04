@@ -54,3 +54,13 @@
 - type: replace
   path: /instance_groups/name=diego-cell/networks/0/name
   value: cell
+
+- type: replace
+  # Our VMs have an MTU set of 9001 on eth0
+  #
+  # Silk will automatically detect the MTU size and remove 50 bytes from it
+  # to account for the vxlan packet overhead, this does not account for IPsec
+  #
+  # There will be at least 73 bytes of overhead due to IPsec
+  path: /instance_groups/name=diego-cell/jobs/name=silk-cni/properties/mtu?
+  value: 8900

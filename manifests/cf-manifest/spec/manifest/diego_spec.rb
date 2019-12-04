@@ -41,4 +41,16 @@ RSpec.describe "diego" do
       end
     end
   end
+
+  context "silk" do
+    let(:silk_cni_props) { manifest_with_defaults.fetch("instance_groups.diego-cell.jobs.silk-cni.properties") }
+
+    it "accounts for the IPsec VPN when setting the MTU" do
+      vm_mtu = 9001
+      ipsec_overhead = 73
+
+      mtu = silk_cni_props['mtu']
+      expect(mtu).to be <= (vm_mtu - ipsec_overhead)
+    end
+  end
 end
