@@ -247,6 +247,7 @@ jobs:
                 export TF_VAR_external_uaa_database_password="((external_uaa_database_password))"
                 export TF_VAR_external_silk_controller_database_password="((external_silk_controller_database_password))"
                 export TF_VAR_external_policy_server_database_password="((external_policy_server_database_password))"
+                export TF_VAR_external_credhub_database_password="((external_credhub_database_password))"
                 EOF
 
       - task: cf-terraform-destroy

@@ -311,3 +311,7 @@
     release: uaa-customized
     properties:
         region: ((paas_region_name))
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/credhub_admin_client/override?
+  value: true

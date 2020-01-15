@@ -54,3 +54,5 @@ external_silk_controller_database_name: network_connectivity
 external_silk_controller_database_username: network_connectivity
 external_app_autoscaler_database_name: app_autoscaler
 external_app_autoscaler_database_username: app_autoscaler
+external_credhub_database_name: credhub
+external_credhub_database_username: credhub
