@@ -1,6 +1,7 @@
 RSpec.describe 'credhub' do
   let(:manifest) { manifest_with_defaults }
   let(:credhub_props) { manifest.fetch('instance_groups.credhub.jobs.credhub.properties.credhub') }
+  let(:credhub_vm_extensions) { manifest.fetch('instance_groups.credhub.vm_extensions') }
 
   it 'should enable credhub' do
     expect { credhub_props }.not_to raise_error
@@ -19,6 +20,12 @@ RSpec.describe 'credhub' do
       expect(data_storage_props.dig('username')).to eq('credhub')
 
       expect(data_storage_props.dig('password')).to eq('((external_credhub_database_password))')
+    end
+  end
+
+  context 'vm extensions' do
+    it 'should be able to connect to cf rds database' do
+      expect(credhub_vm_extensions).to include('cf_rds_client_sg')
     end
   end
 end
