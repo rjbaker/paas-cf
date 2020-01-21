@@ -64,3 +64,17 @@
   # There will be at least 73 bytes of overhead due to IPsec
   path: /instance_groups/name=diego-cell/jobs/name=silk-cni/properties/mtu?
   value: 8900
+
+# Override the vpa bosh link, so that we can add isolation segments
+- type: replace
+  path: /instance_groups/name=diego-cell/jobs/name=vxlan-policy-agent/provides?/vpa?
+  value:
+    as: vpa-default
+- type: replace
+  path: /instance_groups/name=diego-cell/jobs/name=silk-cni/consumes?/vpa?
+  value:
+    from: vpa-default
+- type: replace
+  path: /instance_groups/name=diego-cell/jobs/name=silk-daemon/consumes?/vpa?
+  value:
+    from: vpa-default
