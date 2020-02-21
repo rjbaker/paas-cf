@@ -2911,7 +2911,7 @@ jobs:
                 cf target -o admin -s healthchecks
 
                 cd paas-cf/platform-tests/example-apps/healthcheck
-                cf push simulated-load -i 180
+                cf push simulated-load -i 30
 
                 timeout=300
                 deadline=$(($(date +%s) + timeout))
