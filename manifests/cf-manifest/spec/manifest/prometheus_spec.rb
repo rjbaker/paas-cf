@@ -139,7 +139,56 @@ RSpec.describe "prometheus" do
       )
     end
 
-    it "has retention configured" do
+    it "should scrape router metrics-agent" do
+      scrape_configs = prometheus_config["scrape_configs"]
+      router_scrape_config = scrape_configs.find { |c| c["job_name"] == "router" }
+
+      expect(router_scrape_config).not_to be_nil
+
+      expect(router_scrape_config["scheme"]).to eq("https")
+
+      expect(router_scrape_config["tls_config"]).to eq(
+        "cert_file" => "/var/vcap/jobs/prom_scraper/config/certs/scrape.crt",
+        "key_file" => "/var/vcap/jobs/prom_scraper/config/certs/scrape.key",
+        "insecure_skip_verify" => true, # We do IP based service discovery
+      )
+
+      expect(router_scrape_config["basic_auth"]).to be_nil
+
+      targets = router_scrape_config["dns_sd_configs"].first
+
+      expect(targets).to eq(
+        "names" => ["gorouter.service.cf.internal"],
+        "type" => "A",
+        "port" => 14726,
+        "refresh_interval" => "15s",
+      )
+
+      metric_relabel_configs = router_scrape_config["metric_relabel_configs"]
+
+      expect(metric_relabel_configs).to include(
+        "source_labels" => ["source_id"],
+        "separator" => ";",
+        "regex" => "^$",
+        "action" => "drop",
+      ), "It should drop non-tenant metrics"
+
+      expect(metric_relabel_configs).to include(
+        "source_labels" => ["source_id"],
+        "separator" => ";",
+        "regex" => "^gorouter$",
+        "action" => "drop",
+      ), "It should drop gorouter metrics"
+
+      expect(metric_relabel_configs).to include(
+        "source_labels" => ["source_id"],
+        "separator" => ";",
+        "regex" => "^[[:xdigit:]]{8}-[[:xdigit:]]{4}-.*$",
+        "action" => "keep",
+      ), "It should keep metrics that are labelled for tenants"
+    end
+
+    it "should have retention configured" do
       retention_time = prometheus_config.dig("storage", "tsdb", "retention", "time")
       retention_size = prometheus_config.dig("storage", "tsdb", "retention", "size")
 

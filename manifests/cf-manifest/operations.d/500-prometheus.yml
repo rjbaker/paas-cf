@@ -108,6 +108,36 @@
                     regex: 'prometheus_sd_(consul|kubernetes)_.*'
                     action: drop
 
+              - job_name: router
+                scheme: https
+
+                dns_sd_configs:
+                  - names: ['gorouter.service.cf.internal']
+                    type: A
+                    refresh_interval: 15s
+                    port: 14726
+
+                tls_config:
+                  cert_file: /var/vcap/jobs/prom_scraper/config/certs/scrape.crt
+                  key_file: /var/vcap/jobs/prom_scraper/config/certs/scrape.key
+                  insecure_skip_verify: true
+
+                metric_relabel_configs:
+                  - source_labels: [source_id]
+                    separator: ;
+                    regex: '^$'
+                    action: drop
+
+                  - source_labels: [source_id]
+                    separator: ;
+                    regex: '^gorouter$'
+                    action: drop
+
+                  - source_labels: [source_id]
+                    separator: ;
+                    regex: '^[[:xdigit:]]{8}-[[:xdigit:]]{4}-.*$'
+                    action: keep
+
       - name: route_registrar
         release: routing
         properties:
