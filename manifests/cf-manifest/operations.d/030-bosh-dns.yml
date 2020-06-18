@@ -2,10 +2,10 @@
 - type: replace
   path: /releases/-
   value:
-    name: bosh-dns
-    version: "1.17.0"
-    url: "https://bosh.io/d/github.com/cloudfoundry/bosh-dns-release?v=1.17.0"
-    sha1: "d514ab3ae376778e106e17c22b78a8705690ae1d"
+    name: "bosh-dns"
+    version: "1.23.0"
+    url: "https://bosh.io/d/github.com/cloudfoundry/bosh-dns-release?v=1.23.0"
+    sha1: "0fc80540e94c15000c394ef28548fe1cfad5365b"
 
 - type: replace
   path: /addons/-
@@ -15,6 +15,9 @@
     - name: bosh-dns
       release: bosh-dns
       properties:
+        metrics:
+          address: 0.0.0.0
+          enabled: true
         log_level: WARN
         api:
           client:
