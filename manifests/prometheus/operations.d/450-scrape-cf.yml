@@ -1,0 +1,23 @@
+---
+- type: replace
+  path: /releases/-
+  value:
+    name: "generic-scripting"
+    version: "3"
+    url: "https://bosh.io/d/github.com/orange-cloudfoundry/generic-scripting-release?v=3"
+    sha1: "3198161324c49c670282f5c64b471204a3c510bb"
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/-
+  value:
+    name: scripting
+    release: generic-scripting
+    properties:
+      scripting:
+        pre-start-script: |
+          cat <<CA > /var/vcap/jobs/prometheus2/config/scrape.crt
+          ((prom_scraper_scrape_tls.certificate))
+          CA
+          cat <<KEY > /var/vcap/jobs/prometheus2/config/scrape.key
+          ((prom_scraper_scrape_tls.private_key))
+          KEY
