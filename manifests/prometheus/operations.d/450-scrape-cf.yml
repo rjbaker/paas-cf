@@ -21,3 +21,111 @@
           cat <<KEY > /var/vcap/jobs/prometheus2/config/scrape.key
           ((prom_scraper_scrape_tls.private_key))
           KEY
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/scrape_configs/-
+  value: &scrape-config
+    job_name: router-metrics-agent
+    scheme: https
+
+    tls_config:
+      cert_file: /var/vcap/jobs/prometheus2/config/scrape.crt
+      key_file: /var/vcap/jobs/prometheus2/config/scrape.key
+      insecure_skip_verify: true
+
+    metric_relabel_configs:
+      # do not get things with source_id that looks like a guid
+      # initially at least
+      # so we do not overload prometheus
+      - source_labels: [source_id]
+        separator: ;
+        regex: '^[[:xdigit:]]{8}-[[:xdigit:]]{4}-.*$'
+        action: drop
+
+    dns_sd_configs:
+      - &dns-sd-config
+        names: ['q-s0.router.*.((metrics_environment)).bosh']
+        type: A
+        refresh_interval: 15s
+        port: 14726
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/scrape_configs/-
+  value:
+    <<: *scrape-config
+    job_name: api-metrics-agent
+    dns_sd_configs:
+      - <<: *dns-sd-config
+        names: ['q-s0.api.*.((metrics_environment)).bosh']
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/scrape_configs/-
+  value:
+    <<: *scrape-config
+    job_name: cc-worker-metrics-agent
+    dns_sd_configs:
+      - <<: *dns-sd-config
+        names: ['q-s0.cc-worker.*.((metrics_environment)).bosh']
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/scrape_configs/-
+  value:
+    <<: *scrape-config
+    job_name: diego-api-metrics-agent
+    dns_sd_configs:
+      - <<: *dns-sd-config
+        names: ['q-s0.diego-api.*.((metrics_environment)).bosh']
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/scrape_configs/-
+  value:
+    <<: *scrape-config
+    job_name: diego-cell-metrics-agent
+    dns_sd_configs:
+      - <<: *dns-sd-config
+        names: ['q-s0.diego-cell.*.((metrics_environment)).bosh']
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/scrape_configs/-
+  value:
+    <<: *scrape-config
+    job_name: doppler-metrics-agent
+    dns_sd_configs:
+      - <<: *dns-sd-config
+        names: ['q-s0.doppler.*.((metrics_environment)).bosh']
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/scrape_configs/-
+  value:
+    <<: *scrape-config
+    job_name: log-api-metrics-agent
+    dns_sd_configs:
+      - <<: *dns-sd-config
+        names: ['q-s0.log-api.*.((metrics_environment)).bosh']
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/scrape_configs/-
+  value:
+    <<: *scrape-config
+    job_name: nats-metrics-agent
+    dns_sd_configs:
+      - <<: *dns-sd-config
+        names: ['q-s0.nats.*.((metrics_environment)).bosh']
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/scrape_configs/-
+  value:
+    <<: *scrape-config
+    job_name: scheduler-metrics-agent
+    dns_sd_configs:
+      - <<: *dns-sd-config
+        names: ['q-s0.scheduler.*.((metrics_environment)).bosh']
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/scrape_configs/-
+  value:
+    <<: *scrape-config
+    job_name: uaa-metrics-agent
+    dns_sd_configs:
+      - <<: *dns-sd-config
+        names: ['q-s0.uaa.*.((metrics_environment)).bosh']
