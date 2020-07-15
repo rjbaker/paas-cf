@@ -1,0 +1,17 @@
+- type: remove
+  path: /variables/name=dns_healthcheck_tls_ca
+
+- type: remove
+  path: /variables/name=dns_healthcheck_server_tls
+
+- type: remove
+  path: /variables/name=dns_healthcheck_client_tls
+
+- type: remove
+  path: /variables/name=dns_api_tls_ca
+
+- type: remove
+  path: /variables/name=dns_api_server_tls
+
+- type: remove
+  path: /variables/name=dns_api_client_tls

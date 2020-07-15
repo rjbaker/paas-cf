@@ -56,4 +56,8 @@ bosh interpolate \
   --vars-file="${PAAS_CF_DIR}/manifests/cf-manifest/env-specific/${ENV_SPECIFIC_BOSH_VARS_FILE}" \
   ${opsfile_args} \
   ${alerts_opsfile_args} \
-  "${PROM_BOSHRELEASE_DIR}/manifests/prometheus.yml"
+  "${PROM_BOSHRELEASE_DIR}/manifests/prometheus.yml" \
+| sed "s@dns_api_client_tls[.]@/$DEPLOY_ENV/$DEPLOY_ENV/dns_api_client_tls.@g" \
+| sed "s@dns_api_server_tls[.]@/$DEPLOY_ENV/$DEPLOY_ENV/dns_api_server_tls.@g" \
+| sed "s@dns_healthcheck_client_tls[.]@/$DEPLOY_ENV/$DEPLOY_ENV/dns_healthcheck_client_tls.@g" \
+| sed "s@dns_healthcheck_server_tls[.]@/$DEPLOY_ENV/$DEPLOY_ENV/dns_healthcheck_server_tls.@g"
