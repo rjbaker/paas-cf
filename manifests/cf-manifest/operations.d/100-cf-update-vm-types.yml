@@ -23,6 +23,9 @@
 - type: replace
   path: /instance_groups/name=uaa/vm_type
   value: medium
+- type: replace
+  path: /instance_groups/name=credhub/vm_type
+  value: medium
 
 - type: replace
   path: /instance_groups/name=rotate-cc-database-key/vm_type

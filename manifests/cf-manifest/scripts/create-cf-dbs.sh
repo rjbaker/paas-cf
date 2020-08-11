@@ -9,6 +9,7 @@ api_pass=${TF_VAR_external_cc_database_password:?}
 uaa_pass=${TF_VAR_external_uaa_database_password:?}
 bbs_pass=${TF_VAR_external_bbs_database_password:?}
 locket_pass=${TF_VAR_external_locket_database_password:?}
+credhub_pass=${TF_VAR_external_credhub_database_password:?}
 network_connectivity_pass=${TF_VAR_external_silk_controller_database_password:?}
 network_policy_pass=${TF_VAR_external_policy_server_database_password:?}
 db_address=${TF_VAR_cf_db_address:?}
@@ -30,6 +31,9 @@ psql_adm -d postgres -c "SELECT rolname FROM pg_roles WHERE rolname = 'bbs'" \
 psql_adm -d postgres -c "SELECT rolname FROM pg_roles WHERE rolname = 'locket'" \
   | grep -q 'locket' || psql_adm -d postgres -c "CREATE USER locket WITH ROLE dbadmin"
 
+psql_adm -d postgres -c "SELECT rolname FROM pg_roles WHERE rolname = 'credhub'" \
+  | grep -q 'credhub' || psql_adm -d postgres -c "CREATE USER credhub WITH ROLE dbadmin"
+
 psql_adm -d postgres -c "SELECT rolname FROM pg_roles WHERE rolname = 'network_connectivity'" \
   | grep -q 'network_connectivity' || psql_adm -d postgres -c "CREATE USER network_connectivity WITH ROLE dbadmin"
 
@@ -41,10 +45,11 @@ psql_adm -d postgres -c "ALTER USER api WITH PASSWORD '${api_pass}'"
 psql_adm -d postgres -c "ALTER USER uaa WITH PASSWORD '${uaa_pass}'"
 psql_adm -d postgres -c "ALTER USER bbs WITH PASSWORD '${bbs_pass}'"
 psql_adm -d postgres -c "ALTER USER locket WITH PASSWORD '${locket_pass}'"
+psql_adm -d postgres -c "ALTER USER credhub WITH PASSWORD '${credhub_pass}'"
 psql_adm -d postgres -c "ALTER USER network_connectivity WITH PASSWORD '${network_connectivity_pass}'"
 psql_adm -d postgres -c "ALTER USER network_policy WITH PASSWORD '${network_policy_pass}'"
 
-for db in api uaa bbs locket network_connectivity network_policy; do
+for db in api uaa bbs locket credhub network_connectivity network_policy; do
 
   # Create database
   psql_adm -d postgres -l | grep -q " ${db} " || \
