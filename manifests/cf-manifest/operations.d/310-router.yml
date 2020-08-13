@@ -62,3 +62,4 @@
     ((uaa_ssl.ca))
     ((network_policy_server_external.ca))
     ((credhub_tls.ca))
+    ((vault_tls.ca))
