@@ -2,3 +2,23 @@
 - type: replace
   path: /instance_groups/name=credhub/vm_extensions?/-
   value: cf_rds_client_sg
+
+
+- type: replace
+  path: /instance_groups/name=credhub/jobs/-
+  value:
+    name: route_registrar
+    release: routing
+    properties:
+      route_registrar:
+        routes:
+          - name: credhub
+            tls_port: 8844
+            prepend_instance_index: false
+            registration_interval: 10s
+            uris:
+              - credhub.((system_domain))
+            health_check:
+              name: credhub_dns_health_check
+              script_path: /var/vcap/jobs/credhub/bin/dns_health_check
+            server_cert_domain_san: credhub.service.cf.internal
