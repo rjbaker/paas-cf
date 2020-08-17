@@ -32,6 +32,10 @@ RSpec.describe "release versions" do
         local: "0.1.23",
         upstream: "74.18.0",
       },
+      "routing" => {
+        local: "0.1.3",
+        upstream: "2.0.6",
+      },
     }
 
     manifest_releases = manifest_without_vars_store.fetch("releases").map { |release|
