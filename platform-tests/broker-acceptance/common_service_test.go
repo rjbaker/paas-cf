@@ -24,6 +24,7 @@ var _ = Describe("Common service tests", func() {
 			"redis":         true,
 			"aws-s3-bucket": true,
 			"cdn-route":     false,
+			"hashicorp-vault": false,
 		}
 
 		It("is service shareable", func() {
