@@ -84,7 +84,7 @@
               }
 
               seal "awskms" {
-                kms_key_id = "b1380431-d93c-4428-85b7-3589deb42e70"
+                kms_key_id = "2c241c3d-80b6-4766-9eb3-62a66ce537b8"
               }
 
       - name: route_registrar

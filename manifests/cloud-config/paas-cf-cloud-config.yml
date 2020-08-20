@@ -225,7 +225,7 @@ vm_extensions:
 
 - name: vault_instance_profile
   cloud_properties:
-    iam_instance_profile: tlwr-vault
+    iam_instance_profile: andyhunt-vault
 
 - name: cf_rds_client_sg
   cloud_properties:
