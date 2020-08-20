@@ -44,6 +44,14 @@
       length: 64
 
 - type: replace
+  path: /variables/-
+  value:
+    name: vault_uaa_client_password
+    type: password
+    options:
+      length: 64
+
+- type: replace
   path: /instance_groups/-
   value:
     name: vault
@@ -109,6 +117,7 @@
               vault="/var/vcap/packages/vault/bin/vault"
               vault_ca_path_arg="-ca-path=/var/vcap/jobs/vault/tls/vault/cert.pem"
 
+              # Wait for Vault to be installed
               for i in $(seq 60); do
                 if [ $i -eq "60" ]; then
                   echo "vault not installed after $i attempts...giving up"
@@ -123,6 +132,7 @@
                 sleep 1
               done
 
+              # Wait for Vault to be online
               for i in $(seq 60); do
                 if [ $i -eq "60" ]; then
                   echo "vault not up after $i attempts...giving up"
@@ -137,7 +147,9 @@
                 sleep 1
               done
 
+              # If Vault is not already initialized
               if grep -q 'Initialized\s*false' <<< $($vault status $vault_ca_path_arg); then
+                # Initialize vault
                 echo "Vault not initialized, bootstrapping"
                 init_output=$($vault operator init $vault_ca_path_arg -n 1 -t 1)
 
@@ -155,12 +167,14 @@
                   exit 1
                 fi
 
+                # Enable username and password authentication
                 $vault auth enable $vault_ca_path_arg userpass
                 if [ $? != 0 ]; then
                   echo "Attempted to enable userpass but did not succeed"
                   exit 1
                 fi
 
+                # Write the admin policy
                 $vault policy write $vault_ca_path_arg admin <(cat <<POLICY
               # yes this indentation is correct
               path "auth/*" {
@@ -205,6 +219,7 @@
               POLICY
                 )
 
+                # Set the admin password
                 $vault write $vault_ca_path_arg auth/userpass/users/admin "password=((vault_admin_password))" policies=admin
                 if [ $? != 0 ]; then
                   echo "Attempted to add admin user but did not succeed"
@@ -215,10 +230,22 @@
                 echo "Vault already initialized"
               fi
 
+              # Check Vault isn't sealed
               if grep -q 'Sealed\s*true' <<< $($vault status $vault_ca_path_arg); then
                 echo "Vault should be unsealed but is sealed...giving up"
                 exit 1
               fi
+
+              # Enable CF instance identity authentication
+              $vault auth enable $vault_ca_path_arg  cf
+
+              # Configure authentication method
+              $vault write $vault_ca_path_arg auth/cf/config \
+                identity_ca_certificates="((diego_instance_identity_ca.certificate))((diego_instance_identity_ca.ca))" \
+                cf_api_addr="http://cloud-controller-ng.service.cf.internal:9022" \
+                cf_username="vault" \
+                cf_password="((vault_uaa_client_password))" \
+                cf_api_trusted_certificates="((cc_tls.certificate))((cc_tls.ca))"
 
 - type: replace
   path: /releases/-
