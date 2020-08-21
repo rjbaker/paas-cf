@@ -244,8 +244,11 @@
                 username=admin \
                 password="((vault_admin_password))"
 
-              # Enable CF instance identity authentication
-              $vault auth enable $vault_ca_path_arg  cf
+              # If CF instance identity authentication is not enabled
+              if ! $vault auth list $vault_ca_path_arg | grep -q "cf/"; then
+                # Enable it
+                $vault auth enable $vault_ca_path_arg cf;
+              fi
 
               # Configure authentication method
               $vault write $vault_ca_path_arg auth/cf/config \
