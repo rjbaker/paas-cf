@@ -230,11 +230,19 @@
                 echo "Vault already initialized"
               fi
 
+              #
+
               # Check Vault isn't sealed
               if grep -q 'Sealed\s*true' <<< $($vault status $vault_ca_path_arg); then
                 echo "Vault should be unsealed but is sealed...giving up"
                 exit 1
               fi
+
+              # Log in as the admin user
+              $vault login $vault_ca_path_arg \
+                -method=userpass \
+                username=admin \
+                password="((vault_admin_password))"
 
               # Enable CF instance identity authentication
               $vault auth enable $vault_ca_path_arg  cf
@@ -243,8 +251,8 @@
               $vault write $vault_ca_path_arg auth/cf/config \
                 identity_ca_certificates="((diego_instance_identity_ca.certificate))((diego_instance_identity_ca.ca))" \
                 cf_api_addr="http://cloud-controller-ng.service.cf.internal:9022" \
-                cf_username="vault" \
-                cf_password="((vault_uaa_client_password))" \
+                cf_username="andy.hunt+vaultuser@digital.cabinet-office.gov.uk" \
+                cf_password="passwordpassword123" \
                 cf_api_trusted_certificates="((cc_tls.certificate))((cc_tls.ca))"
 
 - type: replace
