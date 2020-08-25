@@ -2731,10 +2731,12 @@ jobs:
 
                 for ORG in $ALLOWED_ORGS; do
                   cf enable-service-access aws-sqs-queue \
-                    -b standard \
+                    -b sqs-broker \
+                    -p standard \
                     -o "${ORG}"
                   cf enable-service-access aws-sqs-queue \
-                    -b fifo \
+                    -b sqs-broker \
+                    -p fifo \
                     -o "${ORG}"
                 done
 
