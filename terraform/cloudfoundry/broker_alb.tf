@@ -121,7 +121,7 @@ output "cf_s3_broker_target_group_name" {
 
 resource "aws_lb_listener_rule" "cf_sqs_broker" {
   listener_arn = aws_lb_listener.cf_brokers.arn
-  priority     = "112"
+  priority     = "115"
 
   action {
     type             = "forward"
