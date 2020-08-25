@@ -145,6 +145,14 @@ output "s3_broker_ip_restriction_policy_arn" {
   value = aws_iam_policy.s3_broker_user_ip_restriction.arn
 }
 
+output "sqs_broker_elb_name" {
+  value = aws_elb.sqs_broker.name
+}
+
+output "sqs_broker_elb_dns_name" {
+  value = aws_route53_record.sqs_broker.fqdn
+}
+
 output "cdn_broker_elb_name" {
   value = aws_elb.cdn_broker.name
 }
