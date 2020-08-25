@@ -7,7 +7,7 @@ resource "aws_elb" "sqs_broker" {
   security_groups           = [aws_security_group.service_brokers.id]
 
   access_logs {
-    bucket        = aws_sqs_bucket.elb_access_log.id
+    bucket        = aws_s3_bucket.elb_access_log.id
     bucket_prefix = "cf-broker-sqs"
     interval      = 5
   }
