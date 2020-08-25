@@ -189,6 +189,22 @@
                 capabilities = ["read"]
               }
 
+              path "sys/monitor" {
+                capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+              }
+
+              path "v1/sys/monitor" {
+                capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+              }
+
+              path "sys/monitor/*" {
+                capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+              }
+
+              path "v1/sys/monitor/*" {
+                capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+              }
+
               path "sys/policies/acl/*" {
                 capabilities = ["create", "read", "update", "delete", "list", "sudo"]
               }
