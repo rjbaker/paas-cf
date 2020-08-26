@@ -26,13 +26,13 @@ var _ = Describe("SQS broker", func() {
 	// FIXME: remove this BeforeEach block once sqs is enabled for all
 	BeforeEach(func() {
 		workflowhelpers.AsUser(testContext.AdminUserContext(), testContext.ShortTimeout(), func() {
-			standard := cf.Cf("enable-service-access",
+			standard := cf.Cf("enable-service-access", serviceName,
 				"-o", testContext.TestSpace.OrganizationName(),
 				"-b", brokerName,
 				"-p", standardPlanName,
 			).Wait(testConfig.DefaultTimeoutDuration())
 			Expect(standard).To(Exit(0))
-			fifo := cf.Cf("enable-service-access",
+			fifo := cf.Cf("enable-service-access", serviceName,
 				"-o", testContext.TestSpace.OrganizationName(),
 				"-b", brokerName,
 				"-p", standardPlanName,
