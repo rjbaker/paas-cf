@@ -2710,6 +2710,7 @@ jobs:
             CF_ADMIN: ((cf_admin))
             CF_PASS: ((cf_pass))
             SQS_BROKER_PASS: ((secrets_sqs_broker_admin_password))
+            DEPLOY_ENV: ((deploy_env))
           run:
             path: sh
             args:
