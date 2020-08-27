@@ -7,7 +7,6 @@ import (
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/generator"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
-	"github.com/cloudfoundry-incubator/cf-test-helpers/workflowhelpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gbytes"
@@ -16,30 +15,10 @@ import (
 
 var _ = Describe("SQS broker", func() {
 	const (
-		brokerName       = "sqs-broker"
 		serviceName      = "aws-sqs-queue"
 		standardPlanName = "standard"
 		fifoPlanName     = "fifo"
 	)
-
-	// Enable service access for the ephemeral test org.
-	// FIXME: remove this BeforeEach block once sqs is enabled for all
-	BeforeEach(func() {
-		workflowhelpers.AsUser(testContext.AdminUserContext(), testContext.ShortTimeout(), func() {
-			standard := cf.Cf("enable-service-access", serviceName,
-				"-o", testContext.TestSpace.OrganizationName(),
-				"-b", brokerName,
-				"-p", standardPlanName,
-			).Wait(testConfig.DefaultTimeoutDuration())
-			Expect(standard).To(Exit(0))
-			fifo := cf.Cf("enable-service-access", serviceName,
-				"-o", testContext.TestSpace.OrganizationName(),
-				"-b", brokerName,
-				"-p", fifoPlanName,
-			).Wait(testConfig.DefaultTimeoutDuration())
-			Expect(fifo).To(Exit(0))
-		})
-	})
 
 	It("is registered in the marketplace", func() {
 		plans := cf.Cf("marketplace").Wait(testConfig.DefaultTimeoutDuration())

@@ -14,6 +14,7 @@ import (
 	. "github.com/onsi/gomega/gbytes"
 	. "github.com/onsi/gomega/gexec"
 
+	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/workflowhelpers"
 	"github.com/cloudfoundry/cf-acceptance-tests/helpers/config"
@@ -52,6 +53,23 @@ func TestSuite(t *testing.T) {
 		testContext.Setup()
 
 		Expect(systemDomain).NotTo(Equal(""))
+
+		// Enable service access for the ephemeral test org.
+		// FIXME: remove this block once sqs is enabled for all
+		workflowhelpers.AsUser(testContext.AdminUserContext(), testContext.ShortTimeout(), func() {
+			standard := cf.Cf("enable-service-access", "aws-sqs-queue",
+				"-o", testContext.TestSpace.OrganizationName(),
+				"-b", "sqs-broker",
+				"-p", "standard",
+			).Wait(testConfig.DefaultTimeoutDuration())
+			Expect(standard).To(Exit(0))
+			fifo := cf.Cf("enable-service-access", "aws-sqs-queue",
+				"-o", testContext.TestSpace.OrganizationName(),
+				"-b", "sqs-broker",
+				"-p", "fifo",
+			).Wait(testConfig.DefaultTimeoutDuration())
+			Expect(fifo).To(Exit(0))
+		})
 	})
 
 	AfterSuite(func() {
