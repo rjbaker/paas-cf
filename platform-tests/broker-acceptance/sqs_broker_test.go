@@ -35,7 +35,7 @@ var _ = Describe("SQS broker", func() {
 			fifo := cf.Cf("enable-service-access", serviceName,
 				"-o", testContext.TestSpace.OrganizationName(),
 				"-b", brokerName,
-				"-p", standardPlanName,
+				"-p", fifoPlanName,
 			).Wait(testConfig.DefaultTimeoutDuration())
 			Expect(fifo).To(Exit(0))
 		})

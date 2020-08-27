@@ -16,15 +16,15 @@ var _ = Describe("Common service tests", func() {
 	Context("Shareable services", func() {
 
 		shareableServices := map[string]bool{
-			"autoscaler":     false,
-			"elasticsearch":  true,
-			"influxdb":       true,
-			"mysql":          true,
-			"postgres":       true,
-			"redis":          true,
-			"aws-s3-bucket":  true,
-			"aws-sqs-bucket": true,
-			"cdn-route":      false,
+			"autoscaler":    false,
+			"elasticsearch": true,
+			"influxdb":      true,
+			"mysql":         true,
+			"postgres":      true,
+			"redis":         true,
+			"aws-s3-bucket": true,
+			"aws-sqs-queue": true,
+			"cdn-route":     false,
 		}
 
 		It("is service shareable", func() {
