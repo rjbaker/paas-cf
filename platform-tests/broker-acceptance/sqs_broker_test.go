@@ -156,36 +156,5 @@ var _ = Describe("SQS broker", func() {
 				pollForServiceDeletionCompletion(serviceInstanceName)
 			})
 		})
-
-		It("do not run in to race conditions", func(done Done) {
-			By("binding the two apps simultaneously, we should see no errors", func() {
-				bindAppOneChan := make(chan int)
-				bindAppTwoChan := make(chan int)
-
-				bindServiceToAppAsync(appOneName, serviceInstanceName, bindAppOneChan)
-				bindServiceToAppAsync(appTwoName, serviceInstanceName, bindAppTwoChan)
-
-				Expect(<-bindAppOneChan).To(Equal(0))
-				Expect(<-bindAppTwoChan).To(Equal(0))
-			})
-
-			By("Waiting for AWS to be eventually consistent", func() {
-				time.Sleep(10 * time.Second)
-			})
-
-			By("unbinding the two apps simultaneously, we should see no errors", func() {
-				unbindAppOneChan := make(chan int)
-				unbindAppTwoChan := make(chan int)
-
-				unbindServiceFromAppAsync(appOneName, serviceInstanceName, unbindAppOneChan)
-				unbindServiceFromAppAsync(appTwoName, serviceInstanceName, unbindAppTwoChan)
-
-				Expect(<-unbindAppOneChan).To(Equal(0))
-				Expect(<-unbindAppTwoChan).To(Equal(0))
-			})
-
-			close(done)
-		}, 60, // Override default timeout of 1 second for async to be one minute
-		)
 	})
 })
